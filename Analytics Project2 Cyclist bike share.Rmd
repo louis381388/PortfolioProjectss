@@ -1,0 +1,425 @@
+---
+title: "Analytics Project #2: Cyclist bike share"
+output: html_notebook
+---
+```{r}
+#set working directory
+setwd("~/r_folder/Cyclist data")
+```
+
+
+
+```{r}
+#install packages
+install.packages("tidyverse")
+library(tidyverse)
+install.packages('skimr')
+library(skimr)
+install.packages('hms')
+library(hms)
+install.packages('lubridate')
+library(lubridate)
+
+```
+
+```{r}
+#importing datasets Cyclist 01/2020 - 05/2021
+cyclist052021<- read.csv('202105-divvy-tripdata.csv', header = TRUE)
+cyclist042021<- read.csv('202104-divvy-tripdata.csv', header = TRUE)
+cyclist032021<- read.csv('202103-divvy-tripdata.csv', header = TRUE)
+cyclist022021<- read.csv('202102-divvy-tripdata.csv', header = TRUE)
+cyclist012021<- read.csv('202101-divvy-tripdata.csv', header = TRUE)
+cyclist122020<- read.csv('202012-divvy-tripdata.csv', header = TRUE)
+cyclist112020<- read.csv('202011-divvy-tripdata.csv', header = TRUE)
+cyclist102020<- read.csv('202010-divvy-tripdata.csv', header = TRUE)
+cyclist092020<- read.csv('202009-divvy-tripdata.csv', header = TRUE)
+cyclist082020<- read.csv('202008-divvy-tripdata.csv', header = TRUE)
+cyclist072020<- read.csv('202007-divvy-tripdata.csv', header = TRUE)
+cyclist062020<- read.csv('202006-divvy-tripdata.csv', header = TRUE)
+cyclist052020<- read.csv('202005-divvy-tripdata.csv', header = TRUE)
+cyclist042020<- read.csv('Cyclistdata_4,1,2020_4,30,2020.csv', header = TRUE)
+cyclist01_032020<- read.csv('Divvy_Trips_2020_01-03.csv', header = TRUE)
+
+#combining all the datasets into one super dataset for analysis
+Cyclistdata <- rbind(cyclist052021,cyclist042021,cyclist032021,cyclist022021,cyclist012021,cyclist122020,cyclist112020,
+                     cyclist102020,cyclist092020,cyclist082020,cyclist072020,cyclist062020,cyclist052020,cyclist042020,cyclist01_032020)
+
+
+```
+
+```{r}
+#inspecting imported and combined dataset
+skim_without_charts(Cyclistdata)
+str(Cyclistdata)
+
+#What kind of bikes do casual and annual users use
+unique(Cyclistdata$rideable_type)
+
+#three types found: docked, classic, and electric
+#there is docked but no dockless, need more context
+#what are the unique bike types
+#found that the data only showed doc bikes
+#trying on different datasets
+unique(cyclist042020$rideable_type)
+```
+
+```{r}
+#data cleaning/preparation
+Cyclistdata%>%
+  select(member_casual,rideable_type,ride_id)%>%
+  #making sure that we select non misisng data
+  na.omit()%>%
+  skim_without_charts()#looking to see if I deleted any data and I have not!
+#store cleaned/prepared data into new datset
+totalcyclisttype <- Cyclistdata%>%
+  select(member_casual,rideable_type,ride_id)
+```
+
+```{r}
+#total casual members that use electric bike 
+Casualandelectric <- sum(totalcyclisttype$member_casual == 'casual' & totalcyclisttype$rideable_type == 'electric_bike')
+#total casual members that use classic bike
+Casualandclassic <- sum(totalcyclisttype$member_casual == 'casual' & totalcyclisttype$rideable_type == 'classic_bike')
+#total annual and electric
+Memberandelectric <- sum(totalcyclisttype$member_casual == 'member' & totalcyclisttype$rideable_type == 'electric_bike')
+#total annual and classic
+Memberandclassic <- sum(totalcyclisttype$member_casual == 'member' & totalcyclisttype$rideable_type == 'classic_bike')
+
+```
+
+```{r}
+#bymonth and year casual and member bike type usage
+#0521
+Casualandelectric2105 <- sum(cyclist052021$member_casual == 'casual' & cyclist052021$rideable_type == 'electric_bike')
+#total casual members that use classic bike
+Casualandclassic2105 <- sum(cyclist052021$member_casual == 'casual' & cyclist052021$rideable_type == 'classic_bike')
+#total annual and electric
+Memberandelectric2105 <- sum(cyclist052021$member_casual == 'member' & cyclist052021$rideable_type == 'electric_bike')
+#total annual and classic
+Memberandclassic2105 <- sum(cyclist052021$member_casual == 'member' & cyclist052021$rideable_type == 'classic_bike')
+
+#0421
+Casualandelectric2104 <- sum(cyclist042021$member_casual == 'casual' & cyclist042021$rideable_type == 'electric_bike')
+#total casual members that use classic bike
+Casualandclassic2104 <- sum(cyclist042021$member_casual == 'casual' & cyclist042021$rideable_type == 'classic_bike')
+#total annual and electric
+Memberandelectric2104 <- sum(cyclist042021$member_casual == 'member' & cyclist042021$rideable_type == 'electric_bike')
+#total annual and classic
+Memberandclassic2104 <- sum(cyclist042021$member_casual == 'member' & cyclist042021$rideable_type == 'classic_bike')
+
+#0321
+Casualandelectric2103 <- sum(cyclist032021$member_casual == 'casual' & cyclist032021$rideable_type == 'electric_bike')
+#total casual members that use classic bike
+Casualandclassic2103 <- sum(cyclist032021$member_casual == 'casual' & cyclist032021$rideable_type == 'classic_bike')
+#total annual and electric
+Memberandelectric2103 <- sum(cyclist032021$member_casual == 'member' & cyclist032021$rideable_type == 'electric_bike')
+#total annual and classic
+Memberandclassic2103 <- sum(cyclist032021$member_casual == 'member' & cyclist032021$rideable_type == 'classic_bike')
+
+#0221
+Casualandelectric2102 <- sum(cyclist022021$member_casual == 'casual' & cyclist022021$rideable_type == 'electric_bike')
+#total casual members that use classic bike
+Casualandclassic2102 <- sum(cyclist022021$member_casual == 'casual' & cyclist022021$rideable_type == 'classic_bike')
+#total annual and electric
+Memberandelectric2102 <- sum(cyclist022021$member_casual == 'member' & cyclist022021$rideable_type == 'electric_bike')
+#total annual and classic
+Memberandclassic2102 <- sum(cyclist022021$member_casual == 'member' & cyclist022021$rideable_type == 'classic_bike')
+
+#0121
+Casualandelectric2101 <- sum(cyclist012021$member_casual == 'casual' & cyclist012021$rideable_type == 'electric_bike')
+#total casual members that use classic bike
+Casualandclassic2101 <- sum(cyclist012021$member_casual == 'casual' & cyclist012021$rideable_type == 'classic_bike')
+#total annual and electric
+Memberandelectric2101 <- sum(cyclist012021$member_casual == 'member' & cyclist012021$rideable_type == 'electric_bike')
+#total annual and classic
+Memberandclassic2101 <- sum(cyclist012021$member_casual == 'member' & cyclist012021$rideable_type == 'classic_bike')
+
+#1220
+Casualandelectric2012 <- sum(cyclist122020$member_casual == 'casual' & cyclist122020$rideable_type == 'electric_bike')
+#total casual members that use classic bike
+Casualandclassic2012 <- sum(cyclist122020$member_casual == 'casual' & cyclist122020$rideable_type == 'classic_bike')
+#total annual and electric
+Memberandelectric2012 <- sum(cyclist122020$member_casual == 'member' & cyclist122020$rideable_type == 'electric_bike')
+#total annual and classic
+Memberandclassic2012 <- sum(cyclist122020$member_casual == 'member' & cyclist122020$rideable_type == 'classic_bike')
+
+#1120
+Casualandelectric2011 <- sum(cyclist112020$member_casual == 'casual' & cyclist112020$rideable_type == 'electric_bike')
+
+#total annual and electric
+Memberandelectric2011 <- sum(cyclist112020$member_casual == 'member' & cyclist112020$rideable_type == 'electric_bike')
+
+
+
+#1020 only docked and electric so only gonna get information about electric bikes
+#total casual and electric
+Casualandelectric2010 <- sum(cyclist102020$member_casual == 'casual' & cyclist102020$rideable_type == 'electric_bike')
+
+#total annual and electric
+Memberandelectric2010 <- sum(cyclist102020$member_casual == 'member' & cyclist102020$rideable_type == 'electric_bike')
+
+
+
+#0920
+#total casual members that use electric bike
+Casualandelectric2009 <- sum(cyclist092020$member_casual == 'casual' & cyclist092020$rideable_type == 'electric_bike')
+#total casual members that use electric bike
+
+#total annual and electric
+Memberandelectric2009 <- sum(cyclist092020$member_casual == 'member' & cyclist092020$rideable_type == 'electric_bike')
+
+#0820
+#total casual members that use electric bike
+Casualandelectric2008 <- sum(cyclist082020$member_casual == 'casual' & cyclist082020$rideable_type == 'electric_bike')
+#total casual members that use electric bike
+
+#total annual and electric
+Memberandelectric2008 <- sum(cyclist082020$member_casual == 'member' & cyclist082020$rideable_type == 'electric_bike')
+
+#0720
+#total casual members that use electric bike
+Casualandelectric2007<-sum(cyclist072020$member_casual == 'casual' & cyclist072020$rideable_type == 'electric_bike')
+#total casual members that use electric bike
+
+#total annual and electric
+Memberandelectric2007 <- sum(cyclist072020$member_casual == 'member' & cyclist072020$rideable_type == 'electric_bike')
+
+```
+
+```{r}
+#turn annual and casual electric bike and classic bike use into table
+#yearmonth column
+yearmonth_CA <- c('Jul2020','Aug2020','Sept2020','Oct2020','Nov2020','Dec2020','Dec2020','Jan2021','Jan2021','Feb2021','Feb2021','Mar2021','Mar2021','Apr2021','Apr2021','May2021','May2021')
+classicorelect_CA<-c('electric','electric','electric','electric','electric','electric','classic','electric','classic','electric','classic','electric','classic','electric','classic','electric','classic')
+amounts_CA <- c(Casualandelectric2007,Casualandelectric2008,Casualandelectric2009,Casualandelectric2010,Casualandelectric2011,Casualandelectric2012,Casualandclassic2012,Casualandelectric2101,Casualandclassic2101,
+                Casualandelectric2102,Casualandclassic2102,Casualandelectric2103,Casualandclassic2103,Casualandelectric2104,Casualandclassic2104,Casualandelectric2105,Casualandclassic2105)
+membertypes <- c('casual','casual','casual','casual','casual','casual','casual','casual','casual','casual','casual','casual','casual','casual','casual','casual','casual')
+casualRidetype <- data.frame(membertype = membertypes, date = yearmonth_CA, Biketype = classicorelect_CA, amount_of_rides = amounts_CA )
+
+#annual members table
+yearmonth_AN <- c('Jul2020','Aug2020','Sept2020','Oct2020','Nov2020','Dec2020','Dec2020','Jan2021','Jan2021','Feb2021','Feb2021','Mar2021','Mar2021','Apr2021','Apr2021','May2021','May2021')
+classicorelect_AN<-c('electric','electric','electric','electric','electric','electric','classic','electric','classic','electric','classic','electric','classic','electric','classic','electric','classic')
+memberstypes_AN <- c('annual','annual','annual','annual','annual','annual','annual','annual','annual','annual','annual','annual','annual','annual','annual','annual','annual')
+amounts_AN <- c(Memberandelectric2007,Memberandelectric2008,Memberandelectric2009,Memberandelectric2010,Memberandelectric2011,Memberandelectric2012,Memberandclassic2012,Memberandelectric2101,Memberandclassic2101,
+                Memberandelectric2102,Memberandclassic2102,Memberandelectric2103,Memberandclassic2103,Memberandelectric2104,Memberandclassic2104,Memberandelectric2105,Memberandclassic2105)
+Annualridetype <- data.frame(membertype = memberstypes_AN, date = yearmonth_AN, Biketype = classicorelect_AN, amount_of_rides = amounts_AN)
+
+#Combine both tables together
+View(casualRidetype)
+View(Annualridetype)
+Ridetypedata <- rbind(casualRidetype,Annualridetype)
+View(Ridetypedata)
+```
+
+```{r}
+#visualize data!
+#reorder the x axis beacuase ggplot doing alphabetical
+level = c('Jul2020','Aug2020','Sept2020','Oct2020','Nov2020','Dec2020','Jan2021','Feb2021','Mar2021','Apr2021','May2021')
+ggplot(data = Ridetypedata)+geom_point(mapping = aes(x = factor(date, level = level), y = amount_of_rides, color = Biketype))+labs(Title = "Ridertypes based on membertype", )+facet_wrap(~membertype)
+ggplot(data = Ridetypedata)+geom_point(mapping = aes(x = factor(date, level = level), y = amount_of_rides, color = membertype))+labs(Title = "Ridertypes based on membertype", )+facet_wrap(~Biketype)
+
+
+```
+
+```{r}
+#create a graph to compare totals
+ridetypeval <- c(Memberandclassic,Memberandelectric,Casualandclassic,Casualandelectric)
+totalmemtype <-c('Member','Member','casual','casual')
+totalbiketype<- c('classic','electric','classic','electric')
+totalbiketable <- data.frame(membertype = totalmemtype, biketype = totalbiketype, value = ridetypeval)
+ggplot(data = totalbiketable)+geom_point(mapping = aes(x = membertype, y = ridetypeval, color = totalbiketype))
+#casual bikers used more electric bikes while annual members used more classic bikes
+```
+
+```{r}
+#How long does the casual biker and annual biker ride for
+#started at and ended at dates and time are in character form
+
+#change date into datetime
+Cyclistdata%>%
+  select(started_at,ended_at)%>%
+  head()%>%
+  str()
+```
+
+```{r}
+#finding all unique membership types to check for errors
+unique(Cyclistdata$member_casual)
+#view data
+str(cyclist052021)
+```
+
+```{r}
+#Format char into date-time format (posixlt)
+Cyclistdata$started_at <- as.POSIXlt(Cyclistdata$started_at,
+                                     format = "%Y-%M-%d %H:%M:%S")
+Cyclistdata$ended_at <- as.POSIXlt(Cyclistdata$ended_at,
+                                   format = "%Y-%M-%d %H:%M:%S")
+#ended up not needing this step and formated in excel
+```
+
+```{r}
+#new dataframe to omit any bad data and not muatate orginal datafile
+testcyc<-Cyclistdata%>%
+  select(Ride_duration,rideable_type,Day_of_week.name.,day_of_week,member_casual,start_station_name,started_at)
+
+```
+
+```{r}
+#bikes were taken to HQ for testing, need to filter that data out to remove NA
+testcyc_v2 <- testcyc[!(testcyc$start_station_name == "HQ QR" | testcyc$Ride_duration<0),]
+#convert ride_duration to numeric
+testcyc_v2$Ride_duration <- as.numeric(testcyc_v2$Ride_duration)*24*60
+is.numeric(testcyc_v2$Ride_duration)
+
+```
+
+```{r}
+#Descriptive analysis on ride_duration (all figures in minutes)
+#convert into seconds
+mean_ride_duration <- mean(testcyc_v2$Ride_duration)
+median_ride_duration <- median(testcyc_v2$Ride_duration)
+max_ride_duration <- max((testcyc_v2$Ride_duration))
+min_ride_duration <- min((testcyc_v2$Ride_duration))
+
+#Another way of descriptive analysis
+summary(testcyc_v2$Ride_duration)
+```
+
+```{r}
+#casual riders vs member riders duration
+#mean ride length 
+aggregate(testcyc_v2$Ride_duration ~ testcyc_v2$member_casual, FUN = mean)
+#median ride length
+aggregate(testcyc_v2$Ride_duration ~ testcyc_v2$member_casual, FUN = median)
+#max ride length
+aggregate(testcyc_v2$Ride_duration ~ testcyc_v2$member_casual, FUN = max)
+#min ride length
+aggregate(testcyc_v2$Ride_duration ~ testcyc_v2$member_casual, FUN = min)
+
+#average ride time based on day of the week and based on member type
+aggregate(testcyc_v2$Ride_duration ~ testcyc_v2$member_casual+testcyc_v2$Day_of_week.name., FUN = mean)
+#reorder day of week
+testcyc_v2$Day_of_week.name. <- ordered(testcyc_v2$Day_of_week.name., levels=c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))
+
+#average ride time based on day of the week and based on member type
+aggregate(testcyc_v2$Ride_duration ~ testcyc_v2$member_casual+testcyc_v2$Day_of_week.name., FUN = mean)
+
+```
+
+```{r}
+#create a tibble for average ride duration and amount of rides based on member type and day of week
+testcyc_v2 %>%
+  group_by(member_casual,Day_of_week.name.)%>%
+  #calculate average duration of ride and number of rides
+  summarise(number_of_rides = n(),average_duration = mean(Ride_duration))%>%
+  arrange(member_casual,Day_of_week.name.)
+```
+
+```{r}
+#visualize number of rides by ridertype
+testcyc_v2 %>%
+  group_by(member_casual,Day_of_week.name.)%>%
+  summarise(number_of_rides = n(),average_duration = mean(Ride_duration))%>%
+  arrange(member_casual,Day_of_week.name.)%>%
+  ggplot(aes(x = Day_of_week.name., y = number_of_rides,fill = member_casual)) + geom_col(position = "dodge") + labs(title = 'Average Number of Riders on Each Day of the Week')
+#we see that members tend to ride more than casual riders on weekday and casual members ride more on weekends
+
+```
+
+```{r}
+#visualize average duration
+testcyc_v2 %>%
+  group_by(member_casual,Day_of_week.name.)%>%
+  summarise(average_duration = mean(Ride_duration))%>%
+  arrange(member_casual,Day_of_week.name.)%>%
+  ggplot(aes(x = Day_of_week.name., y = average_duration, fill = member_casual)) +
+  geom_col(position = 'dodge')+ labs(title = 'Average duration of Rides on Each day of the Week',x = 'Day of Week', y = 'Average ride Duration \n in minutes')
+#Casual members tend to ride bikes longer than members with weekends having longer ride durations than weekdays
+
+```
+
+```{r}
+#Average duration of bike rides by day of week split by bike type
+testcyc_v2 %>%
+  group_by(member_casual,Day_of_week.name.,rideable_type)%>%
+  summarise(average_duration = mean(Ride_duration))%>%
+  arrange(member_casual,Day_of_week.name.)%>%
+  ggplot(aes(x = Day_of_week.name., y = average_duration, fill = member_casual)) +
+  geom_col(position = 'dodge')+ labs(title = 'Average duration of Rides on Each day of the Week', subtitle = 'Split by Bike type',x = 'Day of Week', y = 'Average ride Duration \n in minutes')+facet_wrap(~rideable_type)
+
+
+```
+
+```{r}
+#turn into dates
+testcyc_v2$date <- as.Date(testcyc_v2$started_at,"%m/%d/%Y")
+testcyc_v2$month <- format(as.Date(testcyc_v2$date), "%m")
+testcyc_v2$year <- format(as.Date(testcyc_v2$date), "%Y")
+testcyc_v2$monthyear<- format(as.Date(testcyc_v2$date),"%m/%Y")
+str(testcyc)
+testcyc_v2$monthyear <- ordered(testcyc_v2$monthyear, levels=c("01/2020", "02/2020", "03/2020", "04/2020","05/2020", "06/2020", "07/2020", "08/2020",'09/2020','10/2020','11/2020',"12/2020",'01/2021',"02/2021", "03/2021", "04/2021","05/2021"))
+
+```
+
+```{r}
+#get  total rides based on member type 
+testcyc_v2%>%
+  group_by(member_casual)%>%
+  summarise(number_of_rides=n())
+```
+
+
+```{r}
+#visualize data 
+#Number of rides ordered by months
+num_ride_graph<- testcyc_v2%>%
+  group_by(member_casual,rideable_type,monthyear)%>%
+  summarise(number_of_rides=n())%>%
+  arrange(member_casual,monthyear)%>%
+  ggplot(aes(x = monthyear,y = number_of_rides, fill = member_casual))+geom_col(position = 'dodge')+labs(title = "Number of rides ordered by months", subtitle = 'January, 2020 - May, 2021') + annotate("text", x = 14, y = 280000, label = "Total rides \n members: 2,910,713 \n casual: 1,867,682 ")
+
+```
+```{r}
+#export as csv file for tableau visualization
+#create dataframes to export
+ride_length_biketype <- aggregate(testcyc_v2$Ride_duration ~ testcyc_v2$member_casual+testcyc_v2$Day_of_week.name.+ testcyc_v2$rideable_type, FUN = mean)
+
+ride_length <- aggregate(testcyc_v2$Ride_duration ~ testcyc_v2$member_casual+testcyc_v2$monthyear, FUN = mean)
+
+ride_count <- testcyc_v2%>%
+  group_by(member_casual,monthyear)%>%
+  summarise(number_of_rides=n())%>%
+  arrange(member_casual,monthyear)
+ride_count_week<- testcyc_v2%>%
+  group_by(member_casual,Day_of_week.name.)%>%
+  summarise(number_of_rides=n())%>%
+  arrange(member_casual,Day_of_week.name.)
+
+write.csv(ride_count_week, file = '~/r_folder/Cyclist data/avg_ride_count_week.csv')
+write.csv(ride_length, file = '~/r_folder/Cyclist data/avg_ride_length.csv')
+write.csv(ride_count, file = '~/r_folder/Cyclist data/avg_ride_count.csv')
+write.csv(ride_length_biketype, file = '~/r_folder/Cyclist data/avg_ride_length_biketype.csv')
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
