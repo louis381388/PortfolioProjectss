@@ -1,0 +1,285 @@
+  #start
+WITH
+  a temp TABLE TO CREATE a NEW concat COLUMN
+WHERE
+  we will be
+USING
+  two indexes TO
+JOIN
+  #CREATE population TABLE
+WITH
+  NEW primary key COLUMN
+WITH
+  Popu AS(
+  SELECT
+    CONCAT(NAME," ",Year) AS Name_year,
+    Population_over_18,
+    NAME,
+    Year
+  FROM
+    `retirement-california.Population.Population_2010_2019`
+  WHERE
+    NAME <> 'Tehama County' ),
+  #CREATE temptable FOR retirement DATA
+WITH
+  NEW primary key COLUMN ret AS(
+  SELECT
+    CONCAT(NAME," ",Year) AS Name_year_ret,
+    Total,
+    With_retirement_income,
+    Without_retirement_income,
+  FROM
+    `retirement-california.Retirement_Income.Retirement_County_2010_2019`) #
+USING
+  the two NEW temp tables I will
+JOIN
+  the TABLE
+SELECT
+  Popu.NAME,
+  Popu.Year,
+  Popu.Name_year,
+  ret.With_retirement_income,
+  ret.Without_retirement_income,
+  Popu.Population_over_18,
+  CAST(ret.With_retirement_income AS NUMERIC)/CAST(Popu.Population_over_18 AS NUMERIC)*100 AS Percentage_With_retirement_income,
+  CAST(ret.Without_retirement_income AS NUMERIC)/CAST(Popu.Population_over_18 AS NUMERIC)*100 AS Percentage_Without_retirement_income,
+FROM
+  ret
+JOIN
+  Popu
+ON
+  Popu.Name_year = ret.Name_year_ret
+WHERE
+  Popu.NAME <> "California" #TABLE has been joined
+  AND downloaded
+  AND uploaded INTO retirement_income dataset #time TO DO analysis :3 #Question 1: What was the year
+WITH
+  the highest growth IN amount OF retirement accounts FOR each county?
+SELECT
+  NAME,
+  Year,
+  With_retirement_change AS max_change
+FROM
+  `retirement-california.Retirement_Income.Retirement_and_Population`
+WHERE
+  NAME <> 'Tehama County, California'
+  AND With_retirement_change IN (
+  SELECT
+    MAX(With_retirement_change) AS max_change
+  FROM
+    `retirement-california.Retirement_Income.Retirement_and_Population`
+  GROUP BY
+    NAME )
+ORDER BY
+  max_change DESC #Creates TABLE wthat shows which years each county had their highest growth IN # OF households
+WITH
+  retirement income # it seems that 2019 had the highest absolute growth across counties # Los Angeles County had the highest absolute growth IN families
+WITH
+  retirement accounts accross ALL counties #now
+WITH
+  percentage change...
+SELECT
+  NAME,
+  Year,
+  With_retirement_change_percent AS max_change
+FROM
+  `retirement-california.Retirement_Income.Retirement_and_Population`
+WHERE
+  NAME <> 'Tehama County, California'
+  AND With_retirement_change_percent IN (
+  SELECT
+    MAX(With_retirement_change_percent) AS max_change
+  FROM
+    `retirement-california.Retirement_Income.Retirement_and_Population`
+  GROUP BY
+    NAME )
+ORDER BY
+  max_change DESC # it seems that 2019 had the highest percentage change across counties
+  AND El Derado County
+HAVING
+  the highest percentage change #Question 2: Which county had most change IN amount OF people
+WITH
+  retirement accounts
+WITH
+  CountyMax AS (
+  SELECT
+    NAME,
+    SUM(With_retirement_change) AS County_Max_change
+  FROM
+    `retirement-california.Retirement_Income.Retirement_and_Population`
+  GROUP BY
+    NAME)
+SELECT
+  NAME,
+  County_Max_change
+FROM
+  CountyMax
+WHERE
+  County_Max_change IN (
+  SELECT
+    MAX(County_Max_change) AS County_with_highest
+  FROM
+    CountyMax) #Los Angeles County had the most absolute growth IN # OF families who had retirement accounts #now
+WITH
+  percentages
+WITH
+  CountyMax AS (
+  SELECT
+    NAME,
+    SUM(With_retirement_change_percent) AS County_Max_change
+  FROM
+    `retirement-california.Retirement_Income.Retirement_and_Population`
+  GROUP BY
+    NAME)
+SELECT
+  NAME,
+  County_Max_change
+FROM
+  CountyMax
+WHERE
+  County_Max_change IN (
+  SELECT
+    MAX(County_Max_change) AS County_with_highest
+  FROM
+    CountyMax) #Napa County had the highest percent growth,
+  12%,
+  IN the # OF families
+WITH
+  retirement accounts
+FROM
+  2010-2019 #Same but instead OF Max we will find Min
+WITH
+  CountyMin AS (
+  SELECT
+    NAME,
+    SUM(With_retirement_change) AS County_Min_change
+  FROM
+    `retirement-california.Retirement_Income.Retirement_and_Population`
+  WHERE
+    NAME <> 'Tehama County, California'#only one instance OF Tehama which means that we should NOT be
+  USING
+    Tehama aka bad DATA
+  GROUP BY
+    NAME)
+SELECT
+  NAME,
+  County_Min_change
+FROM
+  CountyMin
+WHERE
+  County_Min_change IN (
+  SELECT
+    MIN(County_Min_change) AS County_with_highest
+  FROM
+    CountyMin ) #Yuba county had the lowest absolute growth IN # OF families
+WITH
+  retirement accounts
+FROM
+  2010-2019 #now IN percent...
+WITH
+  CountyMin AS (
+  SELECT
+    NAME,
+    SUM(With_retirement_change_percent) AS County_Min_change
+  FROM
+    `retirement-california.Retirement_Income.Retirement_and_Population`
+  WHERE
+    NAME <> 'Tehama County, California'#only one instance OF Tehama which means that we should NOT be
+  USING
+    Tehama aka bad DATA
+  GROUP BY
+    NAME)
+SELECT
+  NAME,
+  County_Min_change
+FROM
+  CountyMin
+WHERE
+  County_Min_change IN (
+  SELECT
+    MIN(County_Min_change) AS County_with_highest
+  FROM
+    CountyMin ) #Yuba County had the lowest percent growth,
+  1.36%,
+  IN the # OF families
+WITH
+  retirement accounts
+FROM
+  2010-2019 #Question 3: Which county IN 2019 had the highest amount OF people without retirement accounts
+SELECT
+  Name,
+  Without_retirement_income AS withouts
+FROM
+  `retirement-california.Retirement_Income.Retirement_and_Population`
+WHERE
+  Without_retirement_income = (
+  SELECT
+    MAX(without) AS highest_without
+  FROM (
+    SELECT
+      Without_retirement_income AS without
+    FROM
+      `retirement-california.Retirement_Income.Retirement_and_Population`
+    WHERE
+      Year = 2019) ) #Los Angeles County had the highest amount OF families without retirement accounts IN 2019 #now IN percent
+SELECT
+  Name,
+  Percentage_Without_retirement_income AS withouts
+FROM
+  `retirement-california.Retirement_Income.Retirement_and_Population`
+WHERE
+  Percentage_Without_retirement_income = (
+  SELECT
+    MAX(Percentage_Without_retirement_income) AS highest_without
+  FROM
+    `retirement-california.Retirement_Income.Retirement_and_Population`
+  WHERE
+    Year = 2019) #Los Angeles County had the highest percentage OF families without reitrement accounts IN 2019 #Question 4: Which county had highest average change IN amount OF people
+WITH
+  retirement accounts
+WITH
+  CountyAVG AS (
+  SELECT
+    NAME,
+    AVG(With_retirement_change) AS County_AVG_change
+  FROM
+    `retirement-california.Retirement_Income.Retirement_and_Population`
+  GROUP BY
+    NAME)
+SELECT
+  NAME,
+  County_AVG_change
+FROM
+  CountyAVG
+WHERE
+  County_AVG_change IN (
+  SELECT
+    MAX(County_AVG_change) AS County_with_highest
+  FROM
+    CountyAVG ) #Los Angeles County had the most average growth IN absolute # OF families who had retirement accounts #Now IN percentage...
+WITH
+  CountyAVG AS (
+  SELECT
+    NAME,
+    AVG(With_retirement_change_percent) AS County_AVG_change
+  FROM
+    `retirement-california.Retirement_Income.Retirement_and_Population`
+  GROUP BY
+    NAME)
+SELECT
+  NAME,
+  County_AVG_change
+FROM
+  CountyAVG
+WHERE
+  County_AVG_change IN (
+  SELECT
+    MAX(County_AVG_change) AS County_with_highest
+  FROM
+    CountyAVG
+  WHERE
+    NAME <> "Tehama County, California") #Napa County has the highest average percentage growth IN # OF families
+WITH
+  Retirement accounts
+FROM
+  2010-2019
